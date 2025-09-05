@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AuthPage from './components/AuthPage';
 import Navbar from './components/Navbar';
 import ActivityFeed from './components/ActivityFeed';
 import Dashboard from './components/Dashboard';
@@ -7,7 +8,16 @@ import Athletes from './components/Athletes';
 import Profile from './components/Profile';
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState('feed');
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
+  if (!isAuthenticated) {
+    return <AuthPage onLogin={handleLogin} />;
+  }
 
   const renderContent = () => {
     switch (activeTab) {
