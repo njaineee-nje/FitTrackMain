@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Brain, Target, Calendar, TrendingUp, Clock } from 'lucide-react';
+import { Brain, Target, Calendar, TrendingUp, Clock, BarChart3 } from 'lucide-react';
 
 interface WeeklyGoal {
   activityType: string;
@@ -9,8 +9,17 @@ interface WeeklyGoal {
   currentSessions: number;
 }
 
+export interface WeeklyActivity {
+  date: string;
+  type: 'run' | 'ride' | 'swim' | 'workout';
+  duration: number; // in minutes
+  distance?: number; // in km
+  calories: number;
+}
+
 interface AIReminderSystemProps {
   onSendReminder: (reminder: AIReminder) => void;
+  onShowWeeklyReport: () => void;
 }
 
 export interface AIReminder {
@@ -22,7 +31,7 @@ export interface AIReminder {
   activityType?: string;
 }
 
-export default function AIReminderSystem({ onSendReminder }: AIReminderSystemProps) {
+export default function AIReminderSystem({ onSendReminder, onShowWeeklyReport }: AIReminderSystemProps) {
   const [weeklyGoals] = useState<WeeklyGoal[]>([
     {
       activityType: 'running',
@@ -38,6 +47,15 @@ export default function AIReminderSystem({ onSendReminder }: AIReminderSystemPro
       currentDistance: 32,
       currentSessions: 1,
     },
+  ]);
+
+  // Sample weekly activity data
+  const [weeklyActivities] = useState<WeeklyActivity[]>([
+    { date: '2025-01-13', type: 'run', duration: 45, distance: 8.2, calories: 420 },
+    { date: '2025-01-14', type: 'workout', duration: 30, calories: 280 },
+    { date: '2025-01-15', type: 'ride', duration: 60, distance: 15.7, calories: 480 },
+    { date: '2025-01-16', type: 'run', duration: 35, distance: 6.1, calories: 350 },
+    { date: '2025-01-18', type: 'swim', duration: 40, distance: 2.1, calories: 320 },
   ]);
 
   const generateMotivationalMessage = (goal: WeeklyGoal): string => {
@@ -106,10 +124,24 @@ export default function AIReminderSystem({ onSendReminder }: AIReminderSystemPro
       
       // Send weekend summary (Sunday 7 PM)
       if (dayOfWeek === 0 && hour === 19) {
+        // Calculate weekly stats for the summary message
+        const totalWorkouts = weeklyActivities.length;
+        const totalDuration = weeklyActivities.reduce((sum, activity) => sum + activity.duration, 0);
+        const totalCalories = weeklyActivities.reduce((sum, activity) => sum + activity.calories, 0);
+        const workoutDays = new Set(weeklyActivities.map(activity => activity.date)).size;
+        
+        const consistencyMessage = workoutDays >= 6 
+          ? "Amazing consistency! Push for 6 days next week!" 
+          : workoutDays >= 4 
+          ? "Great consistency! Push for 6 days next week to reach elite level!"
+          : "Good progress! Aim for more consistency next week!";
+        
+        const summaryMessage = `Week complete! 💪 ${totalWorkouts} workouts, ${Math.floor(totalDuration/60)}h ${totalDuration%60}m total, ${totalCalories} calories burned. ${consistencyMessage}`;
+        
         const summaryReminder: AIReminder = {
           id: `ai-summary-${Date.now()}`,
           title: 'AI Coach: Weekly Summary',
-          message: 'Great week! Let\'s review your progress and plan for next week. Ready to set new goals? 📊',
+          message: summaryMessage,
           type: 'weekly_summary',
           timestamp: new Date(),
         };
@@ -174,9 +206,18 @@ export default function AIReminderSystem({ onSendReminder }: AIReminderSystemPro
       </div>
 
       <div className="mt-4 p-3 bg-white/10 rounded-lg">
-        <div className="flex items-center space-x-2 text-sm">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2 text-sm">
           <Clock className="w-4 h-4" />
           <span>Next AI reminder: Based on your activity patterns</span>
+          </div>
+          <button
+            onClick={onShowWeeklyReport}
+            className="flex items-center space-x-2 px-3 py-1 bg-white/20 rounded-lg hover:bg-white/30 transition-colors text-sm"
+          >
+            <BarChart3 className="w-4 h-4" />
+            <span>Weekly Report</span>
+          </button>
         </div>
       </div>
     </div>

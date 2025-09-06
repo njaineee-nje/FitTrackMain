@@ -24,6 +24,7 @@ function App() {
   const [activeTab, setActiveTab] = useState('feed');
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isNotificationCenterOpen, setIsNotificationCenterOpen] = useState(false);
+  const [showWeeklyReport, setShowWeeklyReport] = useState(false);
 
   const handleLogin = () => {
     setIsAuthenticated(true);
@@ -66,6 +67,9 @@ function App() {
         return (
           <Dashboard
             onSendAIReminder={handleAIReminder}
+            showWeeklyReport={showWeeklyReport}
+            onShowWeeklyReport={() => setShowWeeklyReport(true)}
+            onCloseWeeklyReport={() => setShowWeeklyReport(false)}
           />
         );
       case 'leaderboard':

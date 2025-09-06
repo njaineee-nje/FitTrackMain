@@ -1,13 +1,20 @@
 import React from 'react';
 import { TrendingUp, Target, Calendar, Award, Bell, Plus } from 'lucide-react';
 import AIReminderSystem, { AIReminder } from './AIReminderSystem';
+import WeeklyReportModal from './WeeklyReportModal';
 
 interface DashboardProps {
   onSendAIReminder: (reminder: AIReminder) => void;
+  showWeeklyReport: boolean;
+  onShowWeeklyReport: () => void;
+  onCloseWeeklyReport: () => void;
 }
 
 export default function Dashboard({ 
-  onSendAIReminder
+  onSendAIReminder,
+  showWeeklyReport,
+  onShowWeeklyReport,
+  onCloseWeeklyReport
 }: DashboardProps) {
   const stats = [
     {
@@ -44,6 +51,14 @@ export default function Dashboard({
     },
   ];
 
+  // Sample weekly activity data for the report
+  const weeklyActivities = [
+    { date: '2025-01-13', type: 'run' as const, duration: 45, distance: 8.2, calories: 420 },
+    { date: '2025-01-14', type: 'workout' as const, duration: 30, calories: 280 },
+    { date: '2025-01-15', type: 'ride' as const, duration: 60, distance: 15.7, calories: 480 },
+    { date: '2025-01-16', type: 'run' as const, duration: 35, distance: 6.1, calories: 350 },
+    { date: '2025-01-18', type: 'swim' as const, duration: 40, distance: 2.1, calories: 320 },
+  ];
   return (
     <div className="space-y-6">
       {/* Quick Actions */}
@@ -85,7 +100,10 @@ export default function Dashboard({
       </div>
 
       {/* AI Reminder System */}
-      <AIReminderSystem onSendReminder={onSendAIReminder} />
+      <AIReminderSystem 
+        onSendReminder={onSendAIReminder} 
+        onShowWeeklyReport={onShowWeeklyReport}
+      />
 
       {/* Activity Heatmap */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -141,6 +159,15 @@ export default function Dashboard({
           ))}
         </div>
       </div>
+
+      {/* Weekly Report Modal */}
+      <WeeklyReportModal
+        isOpen={showWeeklyReport}
+        onClose={onCloseWeeklyReport}
+        weekData={weeklyActivities}
+        weekNumber={3}
+        year={2025}
+      />
     </div>
   );
 }
