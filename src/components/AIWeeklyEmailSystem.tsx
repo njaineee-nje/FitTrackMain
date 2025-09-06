@@ -173,13 +173,6 @@ export default function AIWeeklyEmailSystem({
 
     updateNextEmailTime();
     const interval = setInterval(updateNextEmailTime, 60000); // Update every minute
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // AI automatic email checking
-  useEffect(() => {
-    const checkAndSendEmail = () => {
       if (shouldSendWeeklyEmail()) {
         sendAIWeeklyEmail();
       }
