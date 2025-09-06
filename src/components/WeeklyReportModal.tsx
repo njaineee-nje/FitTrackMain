@@ -87,7 +87,7 @@ export default function WeeklyReportModal({
         <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white p-6 rounded-t-xl">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold">Weekly Report</h2>
+              <h2 className="text-2xl font-bold">Weekly Summary Report</h2>
               <p className="text-white/90">Week {weekNumber}, {year}</p>
             </div>
             <button

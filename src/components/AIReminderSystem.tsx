@@ -216,7 +216,7 @@ export default function AIReminderSystem({ onSendReminder, onShowWeeklyReport }:
             className="flex items-center space-x-2 px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors text-sm font-medium"
           >
             <BarChart3 className="w-4 h-4" />
-            <span>View Report</span>
+            <span>View Weekly Summary Report</span>
           </button>
         </div>
       </div>

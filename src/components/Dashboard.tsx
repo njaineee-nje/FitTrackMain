@@ -70,7 +70,7 @@ export default function Dashboard({
             className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:from-orange-600 hover:to-red-600 transition-colors"
           >
             <Calendar className="w-4 h-4" />
-            <span>View Weekly Report</span>
+            <span>View Weekly Summary Report</span>
           </button>
         </div>
         <div className="flex flex-wrap gap-3">
@@ -87,7 +87,7 @@ export default function Dashboard({
             className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             <Calendar className="w-4 h-4" />
-            <span>Weekly Summary</span>
+            <span>Weekly Summary Report</span>
           </button>
         </div>
       </div>
