@@ -62,8 +62,8 @@ export default function Dashboard({
   ];
   // Get user profile data (in a real app, this would come from authentication/user context)
   const userProfile = {
-    name: 'John Runner',
-    email: 'john.runner@example.com'
+    name: 'Test User',
+    email: 'your-email@example.com'
   };
 
   return (

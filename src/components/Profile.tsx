@@ -4,8 +4,8 @@ import { MapPin, Calendar, Trophy, Target, Edit3, Settings, Mail, Bell } from 'l
 export default function Profile() {
   // User profile data - in a real app, this would come from a database/API
   const userProfile = {
-    name: 'John Runner',
-    email: 'john.runner@example.com',
+    name: 'Test User',
+    email: 'your-email@example.com',
     location: 'San Francisco, CA',
     joinDate: 'March 2023',
     bio: 'Passionate runner and fitness enthusiast. Always chasing the next PR! 🏃‍♂️',
