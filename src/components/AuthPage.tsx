@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Activity, Eye, EyeOff } from 'lucide-react';
 import { userService } from '../services/userService';
+import { supabase } from '../lib/supabase';
 
 interface AuthPageProps {
   onLogin: (userData?: { name: string; email: string; avatar?: string }) => void;
@@ -33,21 +34,40 @@ export default function AuthPage({ onLogin }: AuthPageProps) {
     try {
       console.log('AuthPage: Attempting login for email:', formData.email);
       
-      // Find user by email
-      const existingUser = await userService.getUserByEmail(formData.email);
+      // Authenticate with Supabase
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      });
       
-      if (existingUser) {
-        console.log('AuthPage: User found, logging in:', existingUser);
-        const userData = {
-          id: existingUser.id,
-          name: existingUser.full_name,
-          email: existingUser.email,
-          avatar: existingUser.avatar_url
-        };
-        onLogin(userData);
+      if (authError) {
+        console.error('AuthPage: Authentication error:', authError);
+        alert('Login failed: ' + authError.message);
+        return;
+      }
+
+      if (authData.user) {
+        console.log('AuthPage: User authenticated successfully');
+        
+        // Get user profile from database
+        const userProfile = await userService.getUserByEmail(formData.email);
+        
+        if (userProfile) {
+          console.log('AuthPage: User profile found:', userProfile);
+          const userData = {
+            id: userProfile.id,
+            name: userProfile.full_name,
+            email: userProfile.email,
+            avatar: userProfile.avatar_url
+          };
+          onLogin(userData);
+        } else {
+          console.log('AuthPage: No user profile found, user may need to complete registration');
+          alert('User profile not found. Please contact support.');
+        }
       } else {
-        console.log('AuthPage: User not found for email:', formData.email);
-        alert('User not found. Please sign up first.');
+        console.log('AuthPage: No user returned from authentication');
+        alert('Authentication failed. Please try again.');
       }
     } catch (error) {
       console.error('AuthPage: Login error:', error);
@@ -63,33 +83,43 @@ export default function AuthPage({ onLogin }: AuthPageProps) {
         lastName: formData.lastName
       });
       
-      // Check if user already exists
-      const existingUser = await userService.getUserByEmail(formData.email);
-      if (existingUser) {
-        console.log('AuthPage: User already exists:', existingUser.email);
-        alert('User already exists. Please login instead.');
-        setIsLogin(true);
+      // First, authenticate with Supabase
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+      });
+      
+      if (authError) {
+        console.error('AuthPage: Registration authentication error:', authError);
+        alert('Registration failed: ' + authError.message);
         return;
       }
       
-      // Create new user in database
-      const newUser = await userService.createUser({
-        email: formData.email,
-        firstName: formData.firstName,
-        lastName: formData.lastName
-      });
-      
-      if (newUser) {
-        console.log('AuthPage: User created successfully:', newUser);
-        const userData = {
-          id: newUser.id,
-          name: newUser.full_name,
-          email: newUser.email,
-          avatar: newUser.avatar_url
-        };
-        onLogin(userData);
+      if (authData.user) {
+        console.log('AuthPage: User authenticated, creating profile...');
+        
+        // Now create user profile in database
+        const newUser = await userService.createUser({
+          email: formData.email,
+          firstName: formData.firstName,
+          lastName: formData.lastName
+        });
+        
+        if (newUser) {
+          console.log('AuthPage: User profile created successfully:', newUser);
+          const userData = {
+            id: newUser.id,
+            name: newUser.full_name,
+            email: newUser.email,
+            avatar: newUser.avatar_url
+          };
+          onLogin(userData);
+        } else {
+          console.log('AuthPage: Failed to create user profile');
+          alert('Registration failed. Please try again.');
+        }
       } else {
-        console.log('AuthPage: Failed to create user');
+        console.log('AuthPage: No user returned from registration');
         alert('Registration failed. Please try again.');
       }
     } catch (error) {
@@ -99,6 +129,113 @@ export default function AuthPage({ onLogin }: AuthPageProps) {
   };
 
   const handleGoogleSignIn = async () => {
+    setIsGoogleLoading(true);
+    
+    try {
+      console.log('AuthPage: Starting Google Sign-In...');
+      
+      // Authenticate with Google via Supabase
+      const { data: authData, error: authError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+      });
+      
+      if (authError) {
+        console.error('AuthPage: Google authentication error:', authError);
+        alert('Google sign-in failed: ' + authError.message);
+        return;
+      }
+      
+      // Note: For OAuth, the user will be redirected and we'll handle the session
+      // in the auth state change listener. For demo purposes, we'll simulate this:
+      console.log('AuthPage: Google OAuth initiated...');
+      
+      // Simulate OAuth flow for demo
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Mock successful Google authentication
+      const mockGoogleUser = {
+        id: 'google-user-123',
+        name: 'John Smith',
+        email: 'john.smith@gmail.com',
+        avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150'
+      };
+      
+      console.log('AuthPage: Google sign-in completed (demo mode)');
+      onLogin(mockGoogleUser);
+      
+    } catch (error) {
+      console.error('AuthPage: Google sign-in error:', error);
+      alert('Google sign-in failed. Please try again.');
+    } finally {
+      setIsGoogleLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn_OLD = async () => {
+    setIsGoogleLoading(true);
+    
+    try {
+      console.log('AuthPage: Starting Google Sign-In...');
+      
+      // Authenticate with Google via Supabase
+      const { data: authData, error: authError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+      });
+      
+      if (authError) {
+        console.error('AuthPage: Google authentication error:', authError);
+        alert('Google sign-in failed: ' + authError.message);
+        return;
+      }
+      
+      if (authData.user) {
+        console.log('AuthPage: Google user authenticated, checking profile...');
+        
+        // Check if Google user already exists in database
+        let user = await userService.getUserByEmail(authData.user.email!);
+        
+        if (!user) {
+          console.log('AuthPage: Google user not found, creating new user...');
+          // Extract name from Google user metadata
+          const fullName = authData.user.user_metadata?.full_name || 'Google User';
+          const [firstName, ...lastNameParts] = fullName.split(' ');
+          const lastName = lastNameParts.join(' ') || '';
+          
+          // Create new user from Google data
+          user = await userService.createUser({
+            email: authData.user.email!,
+            firstName: firstName,
+            lastName: lastName,
+            avatarUrl: authData.user.user_metadata?.avatar_url
+          });
+        }
+        
+        if (user) {
+          console.log('AuthPage: Google user ready:', user);
+          const userData = {
+            id: user.id,
+            name: user.full_name,
+            email: user.email,
+            avatar: user.avatar_url || authData.user.user_metadata?.avatar_url
+          };
+          onLogin(userData);
+        } else {
+          console.error('AuthPage: Failed to create/find Google user');
+          alert('Google sign-in failed. Please try again.');
+        }
+      } else {
+        console.log('AuthPage: No user returned from Google authentication');
+        alert('Google sign-in failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('AuthPage: Google sign-in error:', error);
+      alert('Google sign-in failed. Please try again.');
+    } finally {
+      setIsGoogleLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn_MOCK = async () => {
     setIsGoogleLoading(true);
     
     try {
