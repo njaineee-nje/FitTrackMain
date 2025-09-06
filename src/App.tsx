@@ -46,6 +46,8 @@ function App() {
         setIsAuthenticated(true);
       } catch (error) {
         console.error('Error loading user data:', error);
+        // Clear invalid data
+        localStorage.removeItem('fittrack_user');
       }
     }
   }, []);
