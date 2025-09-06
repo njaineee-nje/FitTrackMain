@@ -208,15 +208,15 @@ export default function AIReminderSystem({ onSendReminder, onShowWeeklyReport }:
       <div className="mt-4 p-3 bg-white/10 rounded-lg">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2 text-sm">
-          <Clock className="w-4 h-4" />
-          <span>Next AI reminder: Based on your activity patterns</span>
+            <Clock className="w-4 h-4" />
+            <span>Next AI reminder: Based on your activity patterns</span>
           </div>
           <button
             onClick={onShowWeeklyReport}
-            className="flex items-center space-x-2 px-3 py-1 bg-white/20 rounded-lg hover:bg-white/30 transition-colors text-sm"
+            className="flex items-center space-x-2 px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors text-sm font-medium"
           >
             <BarChart3 className="w-4 h-4" />
-            <span>Weekly Report</span>
+            <span>View Report</span>
           </button>
         </div>
       </div>

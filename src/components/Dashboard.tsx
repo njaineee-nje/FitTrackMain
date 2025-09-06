@@ -65,6 +65,13 @@ export default function Dashboard({
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-gray-900">Quick Actions</h2>
+          <button
+            onClick={onShowWeeklyReport}
+            className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:from-orange-600 hover:to-red-600 transition-colors"
+          >
+            <Calendar className="w-4 h-4" />
+            <span>View Weekly Report</span>
+          </button>
         </div>
         <div className="flex flex-wrap gap-3">
           <button className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
@@ -74,6 +81,13 @@ export default function Dashboard({
           <button className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
             <Target className="w-4 h-4" />
             <span>Set Weekly Goals</span>
+          </button>
+          <button
+            onClick={onShowWeeklyReport}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <Calendar className="w-4 h-4" />
+            <span>Weekly Summary</span>
           </button>
         </div>
       </div>
