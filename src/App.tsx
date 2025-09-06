@@ -76,6 +76,13 @@ function App() {
     setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
   };
 
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setUser(null);
+    setActiveTab('feed');
+    setNotifications([]);
+    localStorage.removeItem('fittrack_user');
+  };
   const unreadNotificationCount = notifications.filter(n => !n.isRead).length;
   
   if (!isAuthenticated) {
@@ -101,7 +108,7 @@ function App() {
       case 'athletes':
         return <Athletes />;
       case 'profile':
-        return <Profile user={user} />;
+        return <Profile user={user} onLogout={handleLogout} />;
       default:
         return <ActivityFeed />;
     }
@@ -115,6 +122,7 @@ function App() {
         onTabChange={setActiveTab}
         notificationCount={unreadNotificationCount}
         onNotificationClick={() => setIsNotificationCenterOpen(true)}
+        onLogout={handleLogout}
       />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {renderContent()}

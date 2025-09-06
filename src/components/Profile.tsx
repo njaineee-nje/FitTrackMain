@@ -1,11 +1,12 @@
 import React from 'react';
-import { MapPin, Calendar, Trophy, Target, Edit3, Settings, Mail, Bell } from 'lucide-react';
+import { MapPin, Calendar, Trophy, Target, Edit3, Settings, Mail, Bell, LogOut } from 'lucide-react';
 
 interface ProfileProps {
   user?: { name: string; email: string; avatar?: string } | null;
+  onLogout?: () => void;
 }
 
-export default function Profile({ user }: ProfileProps) {
+export default function Profile({ user, onLogout }: ProfileProps) {
   console.log('Profile component received user:', user); // Debug log
   
   // User profile data - in a real app, this would come from a database/API
@@ -80,6 +81,14 @@ export default function Profile({ user }: ProfileProps) {
             </button>
             <button className="px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors">
               <Settings className="w-4 h-4" />
+            </button>
+            <button
+              onClick={onLogout}
+              className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-white rounded-lg transition-colors flex items-center space-x-2"
+              title="Logout"
+            >
+              <LogOut className="w-4 h-4" />
+              <span>Logout</span>
             </button>
           </div>
         </div>

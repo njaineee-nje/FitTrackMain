@@ -1,5 +1,5 @@
 import React from 'react';
-import { Activity, Home, Trophy, Users, User, Plus, Bell } from 'lucide-react';
+import { Activity, Home, Trophy, Users, User, Plus, Bell, LogOut } from 'lucide-react';
 
 interface NavbarProps {
   activeTab: string;
@@ -7,6 +7,7 @@ interface NavbarProps {
   user?: { name: string; email: string; avatar?: string } | null;
   notificationCount?: number;
   onNotificationClick?: () => void;
+  onLogout?: () => void;
 }
 
 export default function Navbar({ 
@@ -14,7 +15,8 @@ export default function Navbar({
   activeTab, 
   onTabChange, 
   notificationCount = 0, 
-  onNotificationClick 
+  onNotificationClick,
+  onLogout
 }: NavbarProps) {
   const navItems = [
     { id: 'feed', label: 'Feed', icon: Home },
@@ -70,6 +72,13 @@ export default function Navbar({
                   {notificationCount > 9 ? '9+' : notificationCount}
                 </span>
               )}
+            </button>
+            <button
+              onClick={onLogout}
+              className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors duration-200"
+              title="Logout"
+            >
+              <LogOut className="w-5 h-5" />
             </button>
             <button className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md flex items-center space-x-2 transition-colors duration-200">
               <Plus className="w-5 h-5" />
