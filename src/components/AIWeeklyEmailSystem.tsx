@@ -173,6 +173,8 @@ export default function AIWeeklyEmailSystem({
 
     updateNextEmailTime();
     const interval = setInterval(updateNextEmailTime, 60000); // Update every minute
+
+    const checkAndSendEmail = () => {
       if (shouldSendWeeklyEmail()) {
         sendAIWeeklyEmail();
       }
@@ -182,9 +184,12 @@ export default function AIWeeklyEmailSystem({
     checkAndSendEmail();
 
     // Check every hour
-    const interval = setInterval(checkAndSendEmail, 3600000);
+    const interval2 = setInterval(checkAndSendEmail, 3600000);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      clearInterval(interval2);
+    };
   }, [userEmail, weeklyActivities, lastSentDate]);
 
   const getStatusIcon = () => {
