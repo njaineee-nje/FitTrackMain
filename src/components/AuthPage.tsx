@@ -35,8 +35,8 @@ export default function AuthPage({ onLogin }: AuthPageProps) {
       
       // Mock Google user data
       const googleUserData = {
-        name: 'Google User',
-        email: 'user@gmail.com',
+        name: 'John Smith',
+        email: 'john.smith@gmail.com',
         avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150'
       };
       

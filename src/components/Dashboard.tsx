@@ -119,8 +119,8 @@ export default function Dashboard({
 
       {/* AI Weekly Email System */}
       <AIWeeklyEmailSystem
-        userEmail={user?.email || 'your-email@example.com'}
-        userName={user?.name || 'Test User'}
+        userEmail={user?.email || 'john.smith@gmail.com'}
+        userName={user?.name || 'John Smith'}
         weeklyActivities={weeklyActivities}
       />
 

@@ -6,10 +6,12 @@ interface ProfileProps {
 }
 
 export default function Profile({ user }: ProfileProps) {
+  console.log('Profile component received user:', user); // Debug log
+  
   // User profile data - in a real app, this would come from a database/API
   const userProfile = {
-    name: user?.name || 'Test User',
-    email: user?.email || 'your-email@example.com',
+    name: user?.name || 'John Smith',
+    email: user?.email || 'john.smith@gmail.com',
     location: 'San Francisco, CA',
     joinDate: 'March 2023',
     bio: 'Passionate runner and fitness enthusiast. Always chasing the next PR! 🏃‍♂️',
@@ -141,7 +143,7 @@ export default function Profile({ user }: ProfileProps) {
             <h4 className="font-semibold text-gray-900">AI Email Intelligence</h4>
           </div>
           <p className="text-sm text-gray-700">
-            Our AI automatically sends personalized weekly summaries to <strong>{userProfile.email}</strong> every Sunday evening. 
+            Our AI automatically sends personalized weekly summaries to <strong>{user?.email || userProfile.email}</strong> every Sunday evening. 
             Reports include workout stats, consistency analysis, and motivational messages like "Amazing consistency! Push for 6 days next week!"
           </p>
         </div>

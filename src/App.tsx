@@ -33,6 +33,7 @@ function App() {
       setUser(userData);
       // Store user data in localStorage for persistence
       localStorage.setItem('fittrack_user', JSON.stringify(userData));
+      console.log('User logged in:', userData); // Debug log
     }
   };
 
