@@ -6,6 +6,7 @@ import AIWeeklyEmailSystem from './AIWeeklyEmailSystem';
 
 interface DashboardProps {
   onSendAIReminder: (reminder: AIReminder) => void;
+  user?: { name: string; email: string; avatar?: string } | null;
   showWeeklyReport: boolean;
   onShowWeeklyReport: () => void;
   onCloseWeeklyReport: () => void;
@@ -13,6 +14,7 @@ interface DashboardProps {
 
 export default function Dashboard({ 
   onSendAIReminder,
+  user,
   showWeeklyReport,
   onShowWeeklyReport,
   onCloseWeeklyReport
@@ -60,11 +62,6 @@ export default function Dashboard({
     { date: '2025-01-16', type: 'run' as const, duration: 35, distance: 6.1, calories: 350 },
     { date: '2025-01-18', type: 'swim' as const, duration: 40, distance: 2.1, calories: 320 },
   ];
-  // Get user profile data (in a real app, this would come from authentication/user context)
-  const userProfile = {
-    name: 'Test User',
-    email: 'your-email@example.com'
-  };
 
   return (
     <div className="space-y-6">
@@ -122,8 +119,8 @@ export default function Dashboard({
 
       {/* AI Weekly Email System */}
       <AIWeeklyEmailSystem
-        userEmail={userProfile.email}
-        userName={userProfile.name}
+        userEmail={user?.email || 'your-email@example.com'}
+        userName={user?.name || 'Test User'}
         weeklyActivities={weeklyActivities}
       />
 

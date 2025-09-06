@@ -21,14 +21,34 @@ interface Notification {
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<{ name: string; email: string; avatar?: string } | null>(null);
   const [activeTab, setActiveTab] = useState('feed');
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isNotificationCenterOpen, setIsNotificationCenterOpen] = useState(false);
   const [showWeeklyReport, setShowWeeklyReport] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = (userData?: { name: string; email: string; avatar?: string }) => {
     setIsAuthenticated(true);
+    if (userData) {
+      setUser(userData);
+      // Store user data in localStorage for persistence
+      localStorage.setItem('fittrack_user', JSON.stringify(userData));
+    }
   };
+
+  // Load user data on app start
+  React.useEffect(() => {
+    const storedUser = localStorage.getItem('fittrack_user');
+    if (storedUser) {
+      try {
+        const userData = JSON.parse(storedUser);
+        setUser(userData);
+        setIsAuthenticated(true);
+      } catch (error) {
+        console.error('Error loading user data:', error);
+      }
+    }
+  }, []);
 
   const handleAIReminder = (aiReminder: AIReminder) => {
     const notification: Notification = {
@@ -67,6 +87,7 @@ function App() {
         return (
           <Dashboard
             onSendAIReminder={handleAIReminder}
+            user={user}
             showWeeklyReport={showWeeklyReport}
             onShowWeeklyReport={() => setShowWeeklyReport(true)}
             onCloseWeeklyReport={() => setShowWeeklyReport(false)}
@@ -77,7 +98,7 @@ function App() {
       case 'athletes':
         return <Athletes />;
       case 'profile':
-        return <Profile />;
+        return <Profile user={user} />;
       default:
         return <ActivityFeed />;
     }
@@ -85,7 +106,8 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar 
+      <Navbar
+        user={user}
         activeTab={activeTab} 
         onTabChange={setActiveTab}
         notificationCount={unreadNotificationCount}

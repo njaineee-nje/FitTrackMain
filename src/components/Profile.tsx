@@ -1,15 +1,19 @@
 import React from 'react';
 import { MapPin, Calendar, Trophy, Target, Edit3, Settings, Mail, Bell } from 'lucide-react';
 
-export default function Profile() {
+interface ProfileProps {
+  user?: { name: string; email: string; avatar?: string } | null;
+}
+
+export default function Profile({ user }: ProfileProps) {
   // User profile data - in a real app, this would come from a database/API
   const userProfile = {
-    name: 'Test User',
-    email: 'your-email@example.com',
+    name: user?.name || 'Test User',
+    email: user?.email || 'your-email@example.com',
     location: 'San Francisco, CA',
     joinDate: 'March 2023',
     bio: 'Passionate runner and fitness enthusiast. Always chasing the next PR! 🏃‍♂️',
-    avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150',
+    avatar: user?.avatar || 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150',
     emailNotifications: true,
     weeklyReports: true
   };

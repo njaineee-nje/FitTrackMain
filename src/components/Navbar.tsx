@@ -4,11 +4,13 @@ import { Activity, Home, Trophy, Users, User, Plus, Bell } from 'lucide-react';
 interface NavbarProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
+  user?: { name: string; email: string; avatar?: string } | null;
   notificationCount?: number;
   onNotificationClick?: () => void;
 }
 
 export default function Navbar({ 
+  user,
   activeTab, 
   onTabChange, 
   notificationCount = 0, 
@@ -51,6 +53,13 @@ export default function Navbar({
           </div>
 
           <div className="flex items-center space-x-3">
+            {user?.avatar && (
+              <img
+                src={user.avatar}
+                alt={user.name}
+                className="w-8 h-8 rounded-full object-cover"
+              />
+            )}
             <button
               onClick={onNotificationClick}
               className="relative p-2 text-gray-600 hover:text-orange-600 hover:bg-gray-50 rounded-md transition-colors duration-200"
