@@ -8,6 +8,7 @@ import Athletes from './components/Athletes';
 import Profile from './components/Profile';
 import NotificationCenter from './components/NotificationCenter';
 import { AIReminder } from './components/AIReminderSystem';
+import { weeklyEmailService } from './services/weeklyEmailService';
 
 interface Notification {
   id: string;
@@ -21,13 +22,13 @@ interface Notification {
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<{ name: string; email: string; avatar?: string } | null>(null);
+  const [user, setUser] = useState<{ id?: string; name: string; email: string; avatar?: string } | null>(null);
   const [activeTab, setActiveTab] = useState('feed');
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isNotificationCenterOpen, setIsNotificationCenterOpen] = useState(false);
   const [showWeeklyReport, setShowWeeklyReport] = useState(false);
 
-  const handleLogin = (userData?: { name: string; email: string; avatar?: string }) => {
+  const handleLogin = (userData?: { id?: string; name: string; email: string; avatar?: string }) => {
     console.log('App: handleLogin called with userData:', userData);
     setIsAuthenticated(true);
     if (userData) {
@@ -39,6 +40,7 @@ function App() {
       console.log('App: No userData provided, using default');
       // Set default user data if none provided
       const defaultUser = {
+        id: 'default-user',
         name: 'User',
         email: 'user@example.com'
       };
@@ -63,6 +65,17 @@ function App() {
         localStorage.removeItem('fittrack_user');
       }
     }
+  }, []);
+
+  // Test weekly email service (runs once when app loads)
+  React.useEffect(() => {
+    // Trigger weekly email service after a short delay (for demo purposes)
+    const timer = setTimeout(() => {
+      console.log('🧪 Testing weekly email service...');
+      weeklyEmailService.triggerWeeklyReports();
+    }, 5000); // 5 seconds after app loads
+
+    return () => clearTimeout(timer);
   }, []);
 
   const handleAIReminder = (aiReminder: AIReminder) => {

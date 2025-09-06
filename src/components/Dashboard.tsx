@@ -3,10 +3,11 @@ import { TrendingUp, Target, Calendar, Award, Bell, Plus } from 'lucide-react';
 import AIReminderSystem, { AIReminder } from './AIReminderSystem';
 import WeeklyReportModal from './WeeklyReportModal';
 import AIWeeklyEmailSystem from './AIWeeklyEmailSystem';
+import { weeklyEmailService } from '../services/weeklyEmailService';
 
 interface DashboardProps {
   onSendAIReminder: (reminder: AIReminder) => void;
-  user?: { name: string; email: string; avatar?: string } | null;
+  user?: { id?: string; name: string; email: string; avatar?: string } | null;
   showWeeklyReport: boolean;
   onShowWeeklyReport: () => void;
   onCloseWeeklyReport: () => void;
@@ -92,6 +93,15 @@ export default function Dashboard({
           >
             <Calendar className="w-4 h-4" />
             <span>Weekly Summary Report</span>
+          </button>
+        </div>
+        <div className="mt-4">
+          <button
+            onClick={() => weeklyEmailService.triggerWeeklyReports()}
+            className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+          >
+            <span>📧</span>
+            <span>Test Weekly Email Service</span>
           </button>
         </div>
       </div>

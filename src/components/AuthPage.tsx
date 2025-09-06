@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Activity, Eye, EyeOff } from 'lucide-react';
+import { userService } from '../services/userService';
 
 interface AuthPageProps {
   onLogin: (userData?: { name: string; email: string; avatar?: string }) => void;
@@ -18,15 +19,136 @@ export default function AuthPage({ onLogin }: AuthPageProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate authentication
-    const userData = {
-      name: isLogin ? 'User' : `${formData.firstName} ${formData.lastName}`,
-      email: formData.email
-    };
-    onLogin(userData);
+    
+    if (isLogin) {
+      // Handle login - find existing user
+      handleLogin();
+    } else {
+      // Handle registration - create new user
+      handleRegistration();
+    }
+  };
+
+  const handleLogin = async () => {
+    try {
+      console.log('AuthPage: Attempting login for email:', formData.email);
+      
+      // Find user by email
+      const existingUser = await userService.getUserByEmail(formData.email);
+      
+      if (existingUser) {
+        console.log('AuthPage: User found, logging in:', existingUser);
+        const userData = {
+          id: existingUser.id,
+          name: existingUser.full_name,
+          email: existingUser.email,
+          avatar: existingUser.avatar_url
+        };
+        onLogin(userData);
+      } else {
+        console.log('AuthPage: User not found for email:', formData.email);
+        alert('User not found. Please sign up first.');
+      }
+    } catch (error) {
+      console.error('AuthPage: Login error:', error);
+      alert('Login failed. Please try again.');
+    }
+  };
+
+  const handleRegistration = async () => {
+    try {
+      console.log('AuthPage: Attempting registration with data:', {
+        email: formData.email,
+        firstName: formData.firstName,
+        lastName: formData.lastName
+      });
+      
+      // Check if user already exists
+      const existingUser = await userService.getUserByEmail(formData.email);
+      if (existingUser) {
+        console.log('AuthPage: User already exists:', existingUser.email);
+        alert('User already exists. Please login instead.');
+        setIsLogin(true);
+        return;
+      }
+      
+      // Create new user in database
+      const newUser = await userService.createUser({
+        email: formData.email,
+        firstName: formData.firstName,
+        lastName: formData.lastName
+      });
+      
+      if (newUser) {
+        console.log('AuthPage: User created successfully:', newUser);
+        const userData = {
+          id: newUser.id,
+          name: newUser.full_name,
+          email: newUser.email,
+          avatar: newUser.avatar_url
+        };
+        onLogin(userData);
+      } else {
+        console.log('AuthPage: Failed to create user');
+        alert('Registration failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('AuthPage: Registration error:', error);
+      alert('Registration failed. Please try again.');
+    }
   };
 
   const handleGoogleSignIn = async () => {
+    setIsGoogleLoading(true);
+    
+    try {
+      console.log('AuthPage: Starting Google Sign-In...');
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Mock Google user data
+      const googleEmail = 'john.smith@gmail.com';
+      const googleFirstName = 'John';
+      const googleLastName = 'Smith';
+      const googleAvatar = 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150';
+      
+      console.log('AuthPage: Google OAuth completed, checking if user exists...');
+      
+      // Check if Google user already exists in database
+      let user = await userService.getUserByEmail(googleEmail);
+      
+      if (!user) {
+        console.log('AuthPage: Google user not found, creating new user...');
+        // Create new user from Google data
+        user = await userService.createUser({
+          email: googleEmail,
+          firstName: googleFirstName,
+          lastName: googleLastName,
+          avatarUrl: googleAvatar
+        });
+      }
+      
+      if (user) {
+        console.log('AuthPage: Google user ready:', user);
+        const userData = {
+          id: user.id,
+          name: user.full_name,
+          email: user.email,
+          avatar: user.avatar_url || googleAvatar
+        };
+        onLogin(userData);
+      } else {
+        console.error('AuthPage: Failed to create/find Google user');
+        alert('Google sign-in failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('AuthPage: Google sign-in error:', error);
+      alert('Google sign-in failed. Please try again.');
+    } finally {
+      setIsGoogleLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn_OLD = async () => {
     setIsGoogleLoading(true);
     
     try {
@@ -35,6 +157,7 @@ export default function AuthPage({ onLogin }: AuthPageProps) {
       
       // Mock Google user data
       const googleUserData = {
+        id: 'google-user-123',
         name: 'John Smith',
         email: 'john.smith@gmail.com',
         avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150'
@@ -44,6 +167,7 @@ export default function AuthPage({ onLogin }: AuthPageProps) {
       onLogin(googleUserData);
     } catch (error) {
       console.error('Google sign-in failed:', error);
+      alert('Google sign-in failed. Please try again.');
     } finally {
       setIsGoogleLoading(false);
     }
