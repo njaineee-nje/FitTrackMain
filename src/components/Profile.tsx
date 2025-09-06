@@ -21,6 +21,8 @@ export default function Profile({ user, onLogout }: ProfileProps) {
     weeklyReports: true
   };
 
+  console.log('Profile: Final userProfile object:', userProfile);
+
   const userStats = [
     { label: 'Total Distance', value: '1,247 km', period: 'All Time' },
     { label: 'Activities', value: '156', period: 'This Year' },

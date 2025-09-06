@@ -40,6 +40,7 @@ export default function AuthPage({ onLogin }: AuthPageProps) {
         avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150'
       };
       
+      console.log('Google Sign-In: Creating user profile with data:', googleUserData);
       onLogin(googleUserData);
     } catch (error) {
       console.error('Google sign-in failed:', error);

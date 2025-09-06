@@ -28,21 +28,33 @@ function App() {
   const [showWeeklyReport, setShowWeeklyReport] = useState(false);
 
   const handleLogin = (userData?: { name: string; email: string; avatar?: string }) => {
+    console.log('App: handleLogin called with userData:', userData);
     setIsAuthenticated(true);
     if (userData) {
       setUser(userData);
       // Store user data in localStorage for persistence
       localStorage.setItem('fittrack_user', JSON.stringify(userData));
-      console.log('User logged in:', userData); // Debug log
+      console.log('App: User data stored in localStorage:', userData);
+    } else {
+      console.log('App: No userData provided, using default');
+      // Set default user data if none provided
+      const defaultUser = {
+        name: 'User',
+        email: 'user@example.com'
+      };
+      setUser(defaultUser);
+      localStorage.setItem('fittrack_user', JSON.stringify(defaultUser));
     }
   };
 
   // Load user data on app start
   React.useEffect(() => {
     const storedUser = localStorage.getItem('fittrack_user');
+    console.log('App: Loading stored user data:', storedUser);
     if (storedUser) {
       try {
         const userData = JSON.parse(storedUser);
+        console.log('App: Parsed user data:', userData);
         setUser(userData);
         setIsAuthenticated(true);
       } catch (error) {

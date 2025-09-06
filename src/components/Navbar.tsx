@@ -55,6 +55,9 @@ export default function Navbar({
           </div>
 
           <div className="flex items-center space-x-3">
+            <span className="text-sm text-gray-600 hidden md:inline">
+              {user?.name || 'User'}
+            </span>
             {user?.avatar && (
               <img
                 src={user.avatar}
