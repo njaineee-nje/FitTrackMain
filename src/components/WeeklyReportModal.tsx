@@ -199,12 +199,22 @@ export default function WeeklyReportModal({
 
         {/* Footer */}
         <div className="px-6 pb-6">
-          <button
-            onClick={onClose}
-            className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 px-4 rounded-lg font-medium hover:from-orange-600 hover:to-red-600 transition-colors"
-          >
-            Continue Your Journey
-          </button>
+          <div className="space-y-3">
+            <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="flex items-center space-x-2 text-blue-800">
+                <span className="text-lg">📧</span>
+                <p className="text-sm font-medium">
+                  This summary is automatically emailed to you every Sunday evening!
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={onClose}
+              className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 px-4 rounded-lg font-medium hover:from-orange-600 hover:to-red-600 transition-colors"
+            >
+              Continue Your Journey
+            </button>
+          </div>
         </div>
       </div>
     </div>

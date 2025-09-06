@@ -2,6 +2,7 @@ import React from 'react';
 import { TrendingUp, Target, Calendar, Award, Bell, Plus } from 'lucide-react';
 import AIReminderSystem, { AIReminder } from './AIReminderSystem';
 import WeeklyReportModal from './WeeklyReportModal';
+import WeeklyEmailScheduler from './WeeklyEmailScheduler';
 
 interface DashboardProps {
   onSendAIReminder: (reminder: AIReminder) => void;
@@ -112,6 +113,13 @@ export default function Dashboard({
           ))}
         </div>
       </div>
+
+      {/* Weekly Email Summary */}
+      <WeeklyEmailScheduler
+        userEmail="user@example.com" // Replace with actual user email
+        userName="John Runner" // Replace with actual user name
+        weeklyActivities={weeklyActivities}
+      />
 
       {/* AI Reminder System */}
       <AIReminderSystem 
