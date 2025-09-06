@@ -1,7 +1,23 @@
 import React from 'react';
-import { TrendingUp, Target, Calendar, Award } from 'lucide-react';
+import { TrendingUp, Target, Calendar, Award, Bell, Plus } from 'lucide-react';
+import ReminderList from './ReminderList';
+import { ReminderData } from './ReminderModal';
 
-export default function Dashboard() {
+interface DashboardProps {
+  reminders: ReminderData[];
+  onToggleReminder: (id: string) => void;
+  onEditReminder: (reminder: ReminderData) => void;
+  onDeleteReminder: (id: string) => void;
+  onAddReminder: () => void;
+}
+
+export default function Dashboard({ 
+  reminders, 
+  onToggleReminder, 
+  onEditReminder, 
+  onDeleteReminder,
+  onAddReminder 
+}: DashboardProps) {
   const stats = [
     {
       label: 'This Week',
@@ -39,6 +55,26 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
+      {/* Quick Actions */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-gray-900">Quick Actions</h2>
+        </div>
+        <div className="flex flex-wrap gap-3">
+          <button
+            onClick={onAddReminder}
+            className="flex items-center space-x-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+          >
+            <Bell className="w-4 h-4" />
+            <span>Set Reminder</span>
+          </button>
+          <button className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+            <Plus className="w-4 h-4" />
+            <span>Log Activity</span>
+          </button>
+        </div>
+      </div>
+
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Your Performance</h2>
         
@@ -59,6 +95,14 @@ export default function Dashboard() {
           ))}
         </div>
       </div>
+
+      {/* Activity Reminders */}
+      <ReminderList
+        reminders={reminders}
+        onToggleReminder={onToggleReminder}
+        onEditReminder={onEditReminder}
+        onDeleteReminder={onDeleteReminder}
+      />
 
       {/* Activity Heatmap */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">

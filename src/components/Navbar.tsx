@@ -1,12 +1,19 @@
 import React from 'react';
-import { Activity, Home, Trophy, Users, User, Plus } from 'lucide-react';
+import { Activity, Home, Trophy, Users, User, Plus, Bell } from 'lucide-react';
 
 interface NavbarProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
+  notificationCount?: number;
+  onNotificationClick?: () => void;
 }
 
-export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
+export default function Navbar({ 
+  activeTab, 
+  onTabChange, 
+  notificationCount = 0, 
+  onNotificationClick 
+}: NavbarProps) {
   const navItems = [
     { id: 'feed', label: 'Feed', icon: Home },
     { id: 'activities', label: 'My Activities', icon: Activity },
@@ -43,10 +50,23 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
             ))}
           </div>
 
-          <button className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md flex items-center space-x-2 transition-colors duration-200">
-            <Plus className="w-5 h-5" />
-            <span className="hidden sm:inline">Record Activity</span>
-          </button>
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={onNotificationClick}
+              className="relative p-2 text-gray-600 hover:text-orange-600 hover:bg-gray-50 rounded-md transition-colors duration-200"
+            >
+              <Bell className="w-5 h-5" />
+              {notificationCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {notificationCount > 9 ? '9+' : notificationCount}
+                </span>
+              )}
+            </button>
+            <button className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md flex items-center space-x-2 transition-colors duration-200">
+              <Plus className="w-5 h-5" />
+              <span className="hidden sm:inline">Record Activity</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -66,6 +86,17 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
               <Icon className="w-6 h-6" />
             </button>
           ))}
+          <button
+            onClick={onNotificationClick}
+            className="relative p-3 rounded-md transition-colors duration-200 text-gray-600"
+          >
+            <Bell className="w-6 h-6" />
+            {notificationCount > 0 && (
+              <span className="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                {notificationCount > 9 ? '9+' : notificationCount}
+              </span>
+            )}
+          </button>
         </div>
       </div>
     </nav>
