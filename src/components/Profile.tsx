@@ -1,7 +1,19 @@
 import React from 'react';
-import { MapPin, Calendar, Trophy, Target, Edit3, Settings } from 'lucide-react';
+import { MapPin, Calendar, Trophy, Target, Edit3, Settings, Mail, Bell } from 'lucide-react';
 
 export default function Profile() {
+  // User profile data - in a real app, this would come from a database/API
+  const userProfile = {
+    name: 'John Runner',
+    email: 'john.runner@example.com',
+    location: 'San Francisco, CA',
+    joinDate: 'March 2023',
+    bio: 'Passionate runner and fitness enthusiast. Always chasing the next PR! 🏃‍♂️',
+    avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150',
+    emailNotifications: true,
+    weeklyReports: true
+  };
+
   const userStats = [
     { label: 'Total Distance', value: '1,247 km', period: 'All Time' },
     { label: 'Activities', value: '156', period: 'This Year' },
@@ -31,23 +43,27 @@ export default function Profile() {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
           <div className="flex items-center space-x-6 mb-6 md:mb-0">
             <img
-              src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150"
-              alt="Profile"
+              src={userProfile.avatar}
+              alt={userProfile.name}
               className="w-24 h-24 rounded-full object-cover border-4 border-white/20"
             />
             <div>
-              <h1 className="text-3xl font-bold mb-2">John Runner</h1>
+              <h1 className="text-3xl font-bold mb-2">{userProfile.name}</h1>
               <div className="flex items-center space-x-4 text-white/90 mb-2">
                 <div className="flex items-center space-x-1">
                   <MapPin className="w-4 h-4" />
-                  <span>San Francisco, CA</span>
+                  <span>{userProfile.location}</span>
                 </div>
                 <div className="flex items-center space-x-1">
                   <Calendar className="w-4 h-4" />
-                  <span>Joined March 2023</span>
+                  <span>Joined {userProfile.joinDate}</span>
                 </div>
               </div>
-              <p className="text-white/90">Passionate runner and fitness enthusiast. Always chasing the next PR! 🏃‍♂️</p>
+              <div className="flex items-center space-x-2 text-white/90 mb-2">
+                <Mail className="w-4 h-4" />
+                <span>{userProfile.email}</span>
+              </div>
+              <p className="text-white/90">{userProfile.bio}</p>
             </div>
           </div>
           
@@ -72,6 +88,59 @@ export default function Profile() {
             {stat.period && <p className="text-xs text-gray-500 mt-1">{stat.period}</p>}
           </div>
         ))}
+      </div>
+
+      {/* Email Notification Settings */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <h2 className="text-xl font-bold text-gray-900 mb-6">Email Notifications</h2>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg border border-green-200">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                <Mail className="w-5 h-5 text-green-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900">Weekly Summary Reports</h3>
+                <p className="text-sm text-gray-600">Get detailed workout summaries every Sunday</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-green-600 font-medium">Active</span>
+              <div className="w-12 h-6 bg-green-500 rounded-full relative">
+                <div className="w-5 h-5 bg-white rounded-full absolute right-0.5 top-0.5"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                <Bell className="w-5 h-5 text-blue-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900">AI Fitness Reminders</h3>
+                <p className="text-sm text-gray-600">Smart reminders based on your goals</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-blue-600 font-medium">Active</span>
+              <div className="w-12 h-6 bg-blue-500 rounded-full relative">
+                <div className="w-5 h-5 bg-white rounded-full absolute right-0.5 top-0.5"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="mt-4 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg border border-purple-200">
+          <div className="flex items-center space-x-2 mb-2">
+            <span className="text-2xl">🤖</span>
+            <h4 className="font-semibold text-gray-900">AI Email Intelligence</h4>
+          </div>
+          <p className="text-sm text-gray-700">
+            Our AI automatically sends personalized weekly summaries to <strong>{userProfile.email}</strong> every Sunday evening. 
+            Reports include workout stats, consistency analysis, and motivational messages like "Amazing consistency! Push for 6 days next week!"
+          </p>
+        </div>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">

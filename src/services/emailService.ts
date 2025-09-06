@@ -15,6 +15,12 @@ interface WeeklyEmailData {
     distance?: number;
     calories: number;
   }>;
+  aiInsights?: {
+    consistencyInsight: string;
+    performanceInsight: string;
+    motivationalMessage: string;
+    weeklyScore: number;
+  };
 }
 
 class EmailService {
@@ -22,6 +28,47 @@ class EmailService {
   private serviceId = 'your_service_id'; // Replace with your EmailJS service ID
   private templateId = 'weekly_summary_template'; // Replace with your template ID
   private publicKey = 'your_public_key'; // Replace with your EmailJS public key
+
+  async sendAIWeeklySummary(data: WeeklyEmailData): Promise<boolean> {
+    try {
+      const emailData = {
+        service_id: this.serviceId,
+        template_id: 'ai_weekly_summary_template', // AI-specific template
+        user_id: this.publicKey,
+        template_params: {
+          to_email: data.userEmail,
+          to_name: data.userName,
+          week_number: data.weekNumber,
+          year: data.year,
+          total_workouts: data.totalWorkouts,
+          total_duration: this.formatDuration(data.totalDuration),
+          total_calories: data.totalCalories.toLocaleString(),
+          workout_days: data.workoutDays,
+          consistency_percentage: data.consistencyPercentage,
+          weekly_score: data.aiInsights?.weeklyScore || 0,
+          ai_consistency_insight: data.aiInsights?.consistencyInsight || '',
+          ai_performance_insight: data.aiInsights?.performanceInsight || '',
+          ai_motivational_message: data.aiInsights?.motivationalMessage || '',
+          activities_list: this.formatActivitiesList(data.activities),
+          next_week_goals: this.generateAINextWeekGoals(data),
+          email_subject: `🤖 AI Weekly Summary: ${data.consistencyPercentage}% Consistency - Week ${data.weekNumber}`,
+        }
+      };
+
+      const response = await fetch(this.apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(emailData),
+      });
+
+      return response.ok;
+    } catch (error) {
+      console.error('Failed to send AI weekly summary email:', error);
+      return false;
+    }
+  }
 
   async sendWeeklySummary(data: WeeklyEmailData): Promise<boolean> {
     try {
@@ -113,6 +160,35 @@ class EmailService {
 ⏱️ Duration: ${this.formatDuration(targetDuration)} total
 🔥 Calories: ${targetCalories.toLocaleString()} calories
 📈 Consistency: Beat ${data.consistencyPercentage}%`;
+  }
+
+  private generateAINextWeekGoals(data: WeeklyEmailData): string {
+    const targetDays = Math.min(7, Math.max(data.workoutDays + 1, 5));
+    const targetDuration = Math.max(data.totalDuration + 90, 350); // More ambitious AI goals
+    const targetCalories = Math.max(data.totalCalories + 750, 2500);
+    const targetScore = Math.min(100, (data.aiInsights?.weeklyScore || 0) + 15);
+    
+    return `🎯 AI Recommended Targets:
+📅 Workout Days: ${targetDays} days (consistency is key!)
+⏱️ Total Duration: ${this.formatDuration(targetDuration)} 
+🔥 Calories: ${targetCalories.toLocaleString()} calories
+🏆 Performance Score: ${Math.round(targetScore)}/100
+💪 Focus: ${this.getAIFocusArea(data)}`;
+  }
+
+  private getAIFocusArea(data: WeeklyEmailData): string {
+    const avgDuration = data.totalDuration / data.totalWorkouts || 0;
+    const consistencyPercentage = data.consistencyPercentage;
+    
+    if (consistencyPercentage < 50) {
+      return "Build consistency - aim for regular workout schedule";
+    } else if (avgDuration < 30) {
+      return "Increase workout duration for better results";
+    } else if (data.totalCalories < 1500) {
+      return "Boost intensity to maximize calorie burn";
+    } else {
+      return "Maintain excellence and push new boundaries";
+    }
   }
 }
 

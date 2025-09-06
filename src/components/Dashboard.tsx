@@ -2,7 +2,7 @@ import React from 'react';
 import { TrendingUp, Target, Calendar, Award, Bell, Plus } from 'lucide-react';
 import AIReminderSystem, { AIReminder } from './AIReminderSystem';
 import WeeklyReportModal from './WeeklyReportModal';
-import WeeklyEmailScheduler from './WeeklyEmailScheduler';
+import AIWeeklyEmailSystem from './AIWeeklyEmailSystem';
 
 interface DashboardProps {
   onSendAIReminder: (reminder: AIReminder) => void;
@@ -60,6 +60,12 @@ export default function Dashboard({
     { date: '2025-01-16', type: 'run' as const, duration: 35, distance: 6.1, calories: 350 },
     { date: '2025-01-18', type: 'swim' as const, duration: 40, distance: 2.1, calories: 320 },
   ];
+  // Get user profile data (in a real app, this would come from authentication/user context)
+  const userProfile = {
+    name: 'John Runner',
+    email: 'john.runner@example.com'
+  };
+
   return (
     <div className="space-y-6">
       {/* Quick Actions */}
@@ -114,10 +120,10 @@ export default function Dashboard({
         </div>
       </div>
 
-      {/* Weekly Email Summary */}
-      <WeeklyEmailScheduler
-        userEmail="user@example.com" // Replace with actual user email
-        userName="John Runner" // Replace with actual user name
+      {/* AI Weekly Email System */}
+      <AIWeeklyEmailSystem
+        userEmail={userProfile.email}
+        userName={userProfile.name}
         weeklyActivities={weeklyActivities}
       />
 
