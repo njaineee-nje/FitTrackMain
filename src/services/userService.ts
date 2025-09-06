@@ -20,9 +20,18 @@ class UserService {
     try {
       console.log('UserService: Creating user with data:', userData);
       
+      // Get the current authenticated user
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      
+      if (!authUser) {
+        console.error('UserService: No authenticated user found');
+        return null;
+      }
+      
       const { data, error } = await supabase
         .from('users')
         .insert({
+          id: authUser.id,
           email: userData.email,
           first_name: userData.firstName,
           last_name: userData.lastName,
@@ -50,7 +59,7 @@ class UserService {
         .from('users')
         .select('*')
         .eq('email', email)
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error('UserService: Error fetching user by email:', error);
