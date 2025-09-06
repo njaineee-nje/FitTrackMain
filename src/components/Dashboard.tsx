@@ -1,22 +1,13 @@
 import React from 'react';
 import { TrendingUp, Target, Calendar, Award, Bell, Plus } from 'lucide-react';
-import ReminderList from './ReminderList';
-import { ReminderData } from './ReminderModal';
+import AIReminderSystem, { AIReminder } from './AIReminderSystem';
 
 interface DashboardProps {
-  reminders: ReminderData[];
-  onToggleReminder: (id: string) => void;
-  onEditReminder: (reminder: ReminderData) => void;
-  onDeleteReminder: (id: string) => void;
-  onAddReminder: () => void;
+  onSendAIReminder: (reminder: AIReminder) => void;
 }
 
 export default function Dashboard({ 
-  reminders, 
-  onToggleReminder, 
-  onEditReminder, 
-  onDeleteReminder,
-  onAddReminder 
+  onSendAIReminder
 }: DashboardProps) {
   const stats = [
     {
@@ -61,16 +52,13 @@ export default function Dashboard({
           <h2 className="text-xl font-bold text-gray-900">Quick Actions</h2>
         </div>
         <div className="flex flex-wrap gap-3">
-          <button
-            onClick={onAddReminder}
-            className="flex items-center space-x-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
-          >
-            <Bell className="w-4 h-4" />
-            <span>Set Reminder</span>
-          </button>
           <button className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
             <Plus className="w-4 h-4" />
             <span>Log Activity</span>
+          </button>
+          <button className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+            <Target className="w-4 h-4" />
+            <span>Set Weekly Goals</span>
           </button>
         </div>
       </div>
@@ -96,13 +84,8 @@ export default function Dashboard({
         </div>
       </div>
 
-      {/* Activity Reminders */}
-      <ReminderList
-        reminders={reminders}
-        onToggleReminder={onToggleReminder}
-        onEditReminder={onEditReminder}
-        onDeleteReminder={onDeleteReminder}
-      />
+      {/* AI Reminder System */}
+      <AIReminderSystem onSendReminder={onSendAIReminder} />
 
       {/* Activity Heatmap */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
