@@ -84,7 +84,8 @@ function App() {
     const checkReminders = () => {
       const now = new Date();
       const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-      const currentDay = now.toLocaleDateString('en-US', { weekday: 'lowercase' });
+      const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+      const currentDay = dayNames[now.getDay()];
 
       reminders.forEach(reminder => {
         if (reminder.isActive && 
